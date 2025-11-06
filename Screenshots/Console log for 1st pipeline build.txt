@@ -1,0 +1,129 @@
+Started by user Siddharth Sandeep
+Obtained Jenkinsfile from git https://github.com/SiddharthSan/jenkins-multistage-demo.git
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in C:\ProgramData\Jenkins\.jenkins\workspace\jenkins-multistage-demo
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Declarative: Checkout SCM)
+[Pipeline] checkout
+Selected Git installation does not exist. Using Default
+The recommended git tool is: NONE
+No credentials specified
+ > git.exe rev-parse --resolve-git-dir C:\ProgramData\Jenkins\.jenkins\workspace\jenkins-multistage-demo\.git # timeout=10
+Fetching changes from the remote Git repository
+ > git.exe config remote.origin.url https://github.com/SiddharthSan/jenkins-multistage-demo.git # timeout=10
+Fetching upstream changes from https://github.com/SiddharthSan/jenkins-multistage-demo.git
+ > git.exe --version # timeout=10
+ > git --version # 'git version 2.44.0.windows.1'
+ > git.exe fetch --tags --force --progress -- https://github.com/SiddharthSan/jenkins-multistage-demo.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git.exe rev-parse "refs/remotes/origin/dev^{commit}" # timeout=10
+Checking out Revision 9c214e348491e4f196e2b2f64f73d5344dfad311 (refs/remotes/origin/dev)
+ > git.exe config core.sparsecheckout # timeout=10
+ > git.exe checkout -f 9c214e348491e4f196e2b2f64f73d5344dfad311 # timeout=10
+Commit message: "Fix: use Windows-compatible bat commands in Jenkins pipeline"
+First time build. Skipping changelog.
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Build)
+[Pipeline] echo
+ðŸ”§ Building Docker image for inventory-api...
+[Pipeline] bat
+
+C:\ProgramData\Jenkins\.jenkins\workspace\jenkins-multistage-demo>docker build -t inventory-api:latest -f Dockerfile . 
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile:
+#1 transferring dockerfile: 436B 0.1s done
+#1 DONE 0.2s
+
+#2 [internal] load metadata for docker.io/library/python:3.10-slim
+#2 DONE 2.7s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [internal] load build context
+#4 transferring context: 378B 0.0s done
+#4 DONE 0.1s
+
+#5 [build 1/4] FROM docker.io/library/python:3.10-slim@sha256:2a8c7d9efdae9b636de80a187a4ce31374ffb3883a7be06232d25a96e8538bf4
+#5 resolve docker.io/library/python:3.10-slim@sha256:2a8c7d9efdae9b636de80a187a4ce31374ffb3883a7be06232d25a96e8538bf4 0.1s done
+#5 DONE 0.1s
+
+#6 [build 3/4] COPY requirements.txt .
+#6 CACHED
+
+#7 [stage-1 3/4] COPY --from=build /usr/local/lib/python3.10 /usr/local/lib/python3.10
+#7 CACHED
+
+#8 [build 2/4] WORKDIR /app
+#8 CACHED
+
+#9 [build 4/4] RUN pip install --no-cache-dir -r requirements.txt
+#9 CACHED
+
+#10 [stage-1 4/4] COPY inventory-api/ ./inventory-api/
+#10 CACHED
+
+#11 exporting to image
+#11 exporting layers done
+#11 exporting manifest sha256:739ab332c4d4599520e3eb901b7a0c2dc7ce474b7f07d0791dd162b1937402aa done
+#11 exporting config sha256:2a0dcf5c76579d637f2d6fdbc6d41dd8a0659b6984e58355f8f334e88decb326 done
+#11 exporting attestation manifest sha256:15a0d257b9c9f8bd5efbe8981e08fb16534472984c6f27f42eae3abbe682517d
+#11 exporting attestation manifest sha256:15a0d257b9c9f8bd5efbe8981e08fb16534472984c6f27f42eae3abbe682517d 0.0s done
+#11 exporting manifest list sha256:673994802ccabfe347011bcb3464d8a301f4aa20383ae5312ccbc3a93ab7d2ca 0.0s done
+#11 naming to docker.io/library/inventory-api:latest done
+#11 unpacking to docker.io/library/inventory-api:latest 0.0s done
+#11 DONE 0.2s
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Test)
+[Pipeline] echo
+ðŸ§ª Running container for testing...
+[Pipeline] bat
+
+C:\ProgramData\Jenkins\.jenkins\workspace\jenkins-multistage-demo>docker run -d -p 5000:5000 --name inventory-api-test inventory-api:latest 
+23746708e4f8c32cfb6969207135e86255a5764b6f5f14e3392a0400dcae9ddc
+docker: Error response from daemon: failed to set up container networking: driver failed programming external connectivity on endpoint inventory-api-test (f89f059e42ef262949c8014134ad61696cb1b87cf304f6547d40acdad43aced5): Bind for 0.0.0.0:5000 failed: port is already allocated
+
+Run 'docker run --help' for more information
+
+C:\ProgramData\Jenkins\.jenkins\workspace\jenkins-multistage-demo>timeout /t 5 
+ERROR: Input redirection is not supported, exiting the process immediately.
+
+C:\ProgramData\Jenkins\.jenkins\workspace\jenkins-multistage-demo>docker stop inventory-api-test 
+inventory-api-test
+
+C:\ProgramData\Jenkins\.jenkins\workspace\jenkins-multistage-demo>docker rm inventory-api-test 
+inventory-api-test
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Deploy)
+[Pipeline] echo
+ðŸš€ Simulating deployment stage...
+[Pipeline] bat
+
+C:\ProgramData\Jenkins\.jenkins\workspace\jenkins-multistage-demo>echo Deploying inventory-api to production environment... 
+Deploying inventory-api to production environment...
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Declarative: Post Actions)
+[Pipeline] echo
+âœ… Pipeline completed successfully!
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS
